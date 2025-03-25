@@ -1,0 +1,94 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+/* Wrapper */
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Fields */
+input {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Buttons */
+button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.register-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.login-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Task List */
+.tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-title {
+  margin: 0 0 5px 0;
+  font-weight: bold;
+}
+
+.task-description {
+  margin: 0 0 10px 0;
+  color: #555;
+}
+
+.task-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mark-done-btn {
+  background-color: green;
+  color: white;
+}
+
+.mark-done-btn:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+}
