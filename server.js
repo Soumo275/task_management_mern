@@ -9,10 +9,28 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(express.json());
 
-// Use CORS with frontend URL from .env
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+// Debugging: Log frontend URL
+console.log("Allowed Frontend URL:", process.env.FRONTEND_URL);
 
-// Connect to MongoDB using environment variable
+// CORS Middleware
+app.use(
+    cors({
+        origin: process.env.FRONTEND_URL || "*",
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+    })
+);
+
+// Handle Preflight Requests
+app.options("*", (req, res) => {
+    res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL || "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.sendStatus(200);
+});
+
+// Connect to MongoDB
 mongoose
     .connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
@@ -21,6 +39,7 @@ mongoose
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB Connection Error:", err));
 
+// Schema Definitions
 const userSchema = new mongoose.Schema({
     name: String,
     password: String,
@@ -31,13 +50,13 @@ const taskSchema = new mongoose.Schema({
     title: String,
     description: String,
     completed: { type: Boolean, default: false },
-    user: String, // Store the user's name to associate tasks
+    user: String,
 });
 
 const User = mongoose.model("User", userSchema);
 const Task = mongoose.model("Task", taskSchema);
 
-// Middleware to authenticate JWT token
+// JWT Authentication Middleware
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization;
     if (!token) return res.status(401).json({ message: "Access Denied" });
@@ -51,12 +70,12 @@ const authenticate = (req, res, next) => {
     }
 };
 
+// Routes
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
 
-
-// Register a new user
+// Register User
 app.post("/register", async (req, res) => {
     const { name, password } = req.body;
     try {
@@ -72,7 +91,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// Login user
+// Login User
 app.post("/login", async (req, res) => {
     const { name, password } = req.body;
     try {
@@ -89,7 +108,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// Get all tasks for logged-in user
+// Get User's Tasks
 app.get("/tasks", authenticate, async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.user });
@@ -99,7 +118,7 @@ app.get("/tasks", authenticate, async (req, res) => {
     }
 });
 
-// Create a new task
+// Create Task
 app.post("/tasks", authenticate, async (req, res) => {
     const { title, description } = req.body;
     try {
@@ -111,7 +130,7 @@ app.post("/tasks", authenticate, async (req, res) => {
     }
 });
 
-// Update a task (mark as done)
+// Update Task
 app.put("/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndUpdate(
@@ -127,7 +146,7 @@ app.put("/tasks/:id", authenticate, async (req, res) => {
     }
 });
 
-// Delete a task
+// Delete Task
 app.delete("/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndDelete({ id: req.params.id, user: req.user });
@@ -139,6 +158,6 @@ app.delete("/tasks/:id", authenticate, async (req, res) => {
     }
 });
 
-// Start the server
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
