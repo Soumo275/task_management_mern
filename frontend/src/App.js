@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css"; // Import the CSS file
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 function App() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +23,7 @@ function App() {
     const fetchTasks = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.get("http://localhost:5000/tasks", {
+            const res = await axios.get(`${BASE_URL}/tasks`, {
                 headers: { Authorization: token },
             });
             setTasks(res.data);
@@ -36,7 +38,7 @@ function App() {
             return;
         }
         try {
-            await axios.post("http://localhost:5000/register", { name, password });
+            await axios.post(`${BASE_URL}/register`, { name, password });
             alert("Registration Successful!");
         } catch (err) {
             alert("User already exists");
@@ -49,7 +51,7 @@ function App() {
             return;
         }
         try {
-            const res = await axios.post("http://localhost:5000/login", { name, password });
+            const res = await axios.post(`${BASE_URL}/login`, { name, password });
             setUser(res.data.name);
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user", res.data.name);
@@ -73,7 +75,7 @@ function App() {
         }
         try {
             const token = localStorage.getItem("token");
-            await axios.post("http://localhost:5000/tasks", { title, description }, {
+            await axios.post(`${BASE_URL}/tasks`, { title, description }, {
                 headers: { Authorization: token },
             });
             setTitle("");
@@ -87,7 +89,7 @@ function App() {
     const handleMarkDone = async (id) => {
         try {
             const token = localStorage.getItem("token");
-            await axios.put(`http://localhost:5000/tasks/${id}`, {}, {
+            await axios.put(`${BASE_URL}/tasks/${id}`, {}, {
                 headers: { Authorization: token },
             });
             fetchTasks();
@@ -99,7 +101,7 @@ function App() {
     const handleDeleteTask = async (id) => {
         try {
             const token = localStorage.getItem("token");
-            await axios.delete(`http://localhost:5000/tasks/${id}`, {
+            await axios.delete(`${BASE_URL}/tasks/${id}`, {
                 headers: { Authorization: token },
             });
             fetchTasks();
