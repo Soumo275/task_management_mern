@@ -79,12 +79,9 @@ app.get("/", (req, res) => {
     res.send("API is running...");
 });
 
-app.post("/register", (req, res) => {
-    res.json({ message: "Register route working!" });
-});
 
 // Register User
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
     const { name, password } = req.body;
     try {
         const existingUser = await User.findOne({ name });
@@ -99,25 +96,34 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// Login User
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
     const { name, password } = req.body;
+    console.log("Login request received:", name);  // Log user name
+
     try {
         const user = await User.findOne({ name });
+        console.log("User lookup result:", user);  // Log DB response
+
         if (!user) return res.status(400).json({ message: "User not found" });
 
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log("Password match result:", isMatch);  // Log password check
+
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
         const token = jwt.sign({ name: user.name }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        console.log("Token generated:", token);  // Log token generation
+
         res.json({ token, name: user.name });
     } catch (error) {
+        console.error("Error logging in:", error);  // Log error details
         res.status(500).json({ message: "Error logging in", error });
     }
 });
 
+
 // Get User's Tasks
-app.get("/tasks", authenticate, async (req, res) => {
+app.get("/api/tasks", authenticate, async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.user });
         res.json(tasks);
@@ -127,7 +133,7 @@ app.get("/tasks", authenticate, async (req, res) => {
 });
 
 // Create Task
-app.post("/tasks", authenticate, async (req, res) => {
+app.post("/api/tasks", authenticate, async (req, res) => {
     const { title, description } = req.body;
     try {
         const newTask = new Task({ title, description, completed: false, user: req.user });
@@ -139,7 +145,7 @@ app.post("/tasks", authenticate, async (req, res) => {
 });
 
 // Update Task
-app.put("/tasks/:id", authenticate, async (req, res) => {
+app.put("/api/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndUpdate(
             { id: req.params.id, user: req.user },
@@ -155,7 +161,7 @@ app.put("/tasks/:id", authenticate, async (req, res) => {
 });
 
 // Delete Task
-app.delete("/tasks/:id", authenticate, async (req, res) => {
+app.delete("/api/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndDelete({ id: req.params.id, user: req.user });
         if (!task) return res.status(404).json({ message: "Task not found" });
