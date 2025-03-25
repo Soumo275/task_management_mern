@@ -15,19 +15,20 @@ console.log("Allowed Frontend URL:", process.env.FRONTEND_URL);
 // CORS Middleware
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || "*",
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
+      origin: "*", // Allows all origins (for testing). Change this to your frontend URL in production.
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true, // Allow cookies & authentication headers
     })
 );
 
+
 // Handle Preflight Requests
-app.options("*", (req, res) => {
-    res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL || "*");
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // Change '*' to specific frontend URL in production
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.sendStatus(200);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
 });
 
 // Connect to MongoDB
