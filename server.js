@@ -51,6 +51,11 @@ const authenticate = (req, res, next) => {
     }
 };
 
+app.get("/", (req, res) => {
+    res.send("API is running...");
+});
+
+
 // Register a new user
 app.post("/register", async (req, res) => {
     const { name, password } = req.body;
