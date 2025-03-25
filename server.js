@@ -9,9 +9,6 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(express.json());
 
-const Port = process.env.PORT || 5000;
-app.listen(Port, () => console.log(`Server running on port ${PORT}`));
-
 // Use CORS with frontend URL from .env
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 
