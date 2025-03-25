@@ -15,10 +15,10 @@ console.log("Allowed Frontend URL:", process.env.FRONTEND_URL);
 // CORS Middleware
 app.use(
     cors({
-      origin: "*", // Allows all origins (for testing). Change this to your frontend URL in production.
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-      credentials: true, // Allow cookies & authentication headers
+        origin: process.env.FRONTEND_URL, // Allow requests only from your frontend
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true, // Allow cookies & authentication headers
     })
 );
 
@@ -28,6 +28,9 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*"); // Change '*' to specific frontend URL in production
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    if (req.method === "OPTIONS") {
+        return res.status(200).json({});
+    }
     next();
 });
 
@@ -74,6 +77,10 @@ const authenticate = (req, res, next) => {
 // Routes
 app.get("/", (req, res) => {
     res.send("API is running...");
+});
+
+app.post("/register", (req, res) => {
+    res.json({ message: "Register route working!" });
 });
 
 // Register User
