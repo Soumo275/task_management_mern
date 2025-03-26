@@ -81,7 +81,7 @@ app.get("/", (req, res) => {
 
 
 // Register User
-app.post("/api/register", async (req, res) => {
+app.post("/register", async (req, res) => {
     const { name, password } = req.body;
     try {
         const existingUser = await User.findOne({ name });
@@ -96,7 +96,7 @@ app.post("/api/register", async (req, res) => {
     }
 });
 
-app.post("/api/login", async (req, res) => {
+app.post("/login", async (req, res) => {
     const { name, password } = req.body;
     console.log("Login request received:", name);  // Log user name
 
@@ -123,7 +123,7 @@ app.post("/api/login", async (req, res) => {
 
 
 // Get User's Tasks
-app.get("/api/tasks", authenticate, async (req, res) => {
+app.get("/tasks", authenticate, async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.user });
         res.json(tasks);
@@ -133,7 +133,7 @@ app.get("/api/tasks", authenticate, async (req, res) => {
 });
 
 // Create Task
-app.post("/api/tasks", authenticate, async (req, res) => {
+app.post("/tasks", authenticate, async (req, res) => {
     const { title, description } = req.body;
     try {
         const newTask = new Task({ title, description, completed: false, user: req.user });
@@ -145,7 +145,7 @@ app.post("/api/tasks", authenticate, async (req, res) => {
 });
 
 // Update Task
-app.put("/api/tasks/:id", authenticate, async (req, res) => {
+app.put("/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndUpdate(
             { id: req.params.id, user: req.user },
@@ -161,7 +161,7 @@ app.put("/api/tasks/:id", authenticate, async (req, res) => {
 });
 
 // Delete Task
-app.delete("/api/tasks/:id", authenticate, async (req, res) => {
+app.delete("/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndDelete({ id: req.params.id, user: req.user });
         if (!task) return res.status(404).json({ message: "Task not found" });
