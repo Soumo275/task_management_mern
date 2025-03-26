@@ -2,6 +2,17 @@
 
 **Deployment Link:**[(https://task-management-webapp-b2x9.onrender.com/)]
 
+steps to use :
+
+1. click on the link above
+2. fill name and password fields
+3. click on the register button , (a pop-up shows if successful)
+4. login with the same credentials
+5. you can add task by clicking on the add task button
+6. you can delete task by clicking on the delete task button
+7. you can edit task by clicking on the edit task button
+8. logout of the session using the logout button
+
 ## Overview
 
 This is a modern and user-friendly Task Manager Web Application built with React, Axios, and a backend API. It allows users to register, log in, create, manage, and delete tasks. The application features a clean, responsive design with a focus on usability and a modern aesthetic.
