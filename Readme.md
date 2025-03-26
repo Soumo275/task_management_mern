@@ -15,7 +15,7 @@ steps to use :
 
 ## Overview
 
-This is a modern and user-friendly Task Manager Web Application built with React, Axios, and a backend API. It allows users to register, log in, create, manage, and delete tasks. The application features a clean, responsive design with a focus on usability and a modern aesthetic.
+This is a modern and user-friendly Task Manager Web Application built with React, Node, express , and a MongoDb. It allows users to register, log in, create, manage, and delete tasks. The application features a clean, responsive design with a focus on usability and a modern aesthetic.
 
 Users can:
 
@@ -25,8 +25,6 @@ Users can:
 - Delete tasks.
 - View all their tasks in a clear, organized list.
 
-The application utilizes cloud storage for token-based authentication, ensuring a seamless user experience.
-
 <br>
 
 ## Features
@@ -34,18 +32,7 @@ The application utilizes cloud storage for token-based authentication, ensuring 
 - **User Authentication:** Secure registration and login functionality.
 - **Task Management:** Create, read, update (mark as done), and delete tasks.
 - **Responsive Design:** Works well on various screen sizes.
-- **Modern UI:** Clean and intuitive user interface.
 - **Token-Based Authentication:** Uses local storage for secure session management.
-- **API Integration:** Uses Axios to communicate with a backend API.
-
-<br>
-
-## Technologies Used
-
-- **React:** For building the user interface.
-- **Axios:** For making HTTP requests to the backend API.
-- **CSS:** For styling the application.
-- **Local Storage:** For storing authentication tokens.
 
 <br>
 
@@ -112,6 +99,6 @@ The application utilizes cloud storage for token-based authentication, ensuring 
 
 ## Backend API
 
-This application requires a backend API to function using expressjs. Ensure that the API is running and configured correctly.
+This application has a backend API to function using ExpressJs and NodeJs.
 
 <br>
