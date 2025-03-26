@@ -9,23 +9,20 @@ const { v4: uuidv4 } = require("uuid");
 const app = express();
 app.use(express.json());
 
-// Debugging: Log frontend URL
-console.log("Allowed Frontend URL:", process.env.FRONTEND_URL);
+// console.log("Allowed Frontend URL:", process.env.FRONTEND_URL);
 
 // CORS Middleware
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL, // Allow requests only from your frontend
+        origin: process.env.FRONTEND_URL, 
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true, // Allow cookies & authentication headers
+        credentials: true,
     })
 );
 
-
-// Handle Preflight Requests
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // Change '*' to specific frontend URL in production
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     if (req.method === "OPTIONS") {
@@ -34,7 +31,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Connect to MongoDB
+// connect to MongoDB
 mongoose
     .connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
@@ -43,7 +40,7 @@ mongoose
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB Connection Error:", err));
 
-// Schema Definitions
+// schema 
 const userSchema = new mongoose.Schema({
     name: String,
     password: String,
@@ -60,7 +57,7 @@ const taskSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 const Task = mongoose.model("Task", taskSchema);
 
-// JWT Authentication Middleware
+// JWT auth
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization;
     if (!token) return res.status(401).json({ message: "Access Denied" });
@@ -74,13 +71,13 @@ const authenticate = (req, res, next) => {
     }
 };
 
-// Routes
+// route
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
 
 
-// Register User
+// register
 app.post("/register", async (req, res) => {
     const { name, password } = req.body;
     try {
@@ -96,33 +93,34 @@ app.post("/register", async (req, res) => {
     }
 });
 
+//login
 app.post("/login", async (req, res) => {
     const { name, password } = req.body;
-    console.log("Login request received:", name);  // Log user name
+    console.log("Login request received:", name);  
 
     try {
         const user = await User.findOne({ name });
-        console.log("User lookup result:", user);  // Log DB response
+        console.log("User lookup result:", user);  
 
         if (!user) return res.status(400).json({ message: "User not found" });
 
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log("Password match result:", isMatch);  // Log password check
+        console.log("Password match result:", isMatch);  
 
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
         const token = jwt.sign({ name: user.name }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        console.log("Token generated:", token);  // Log token generation
+        console.log("Token generated:", token); 
 
         res.json({ token, name: user.name });
     } catch (error) {
-        console.error("Error logging in:", error);  // Log error details
+        console.error("Error logging in:", error); 
         res.status(500).json({ message: "Error logging in", error });
     }
 });
 
 
-// Get User's Tasks
+// get tasks
 app.get("/tasks", authenticate, async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.user });
@@ -132,7 +130,7 @@ app.get("/tasks", authenticate, async (req, res) => {
     }
 });
 
-// Create Task
+// create task
 app.post("/tasks", authenticate, async (req, res) => {
     const { title, description } = req.body;
     try {
@@ -144,7 +142,7 @@ app.post("/tasks", authenticate, async (req, res) => {
     }
 });
 
-// Update Task
+// update tsak
 app.put("/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndUpdate(
@@ -160,7 +158,7 @@ app.put("/tasks/:id", authenticate, async (req, res) => {
     }
 });
 
-// Delete Task
+// delete Tsak
 app.delete("/tasks/:id", authenticate, async (req, res) => {
     try {
         const task = await Task.findOneAndDelete({ id: req.params.id, user: req.user });
@@ -172,6 +170,5 @@ app.delete("/tasks/:id", authenticate, async (req, res) => {
     }
 });
 
-// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

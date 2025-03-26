@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./App.css"; // Import the CSS file
+import "./App.css"; 
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -112,45 +112,55 @@ function App() {
 
     return (
         <div className="container">
-            {!user ? (
-                <>
-                    <h2>Register / Login</h2>
-                    <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <button className="register-btn" onClick={handleRegister}>Register</button>
-                    <button className="login-btn" onClick={handleLogin}>Login</button>
-                </>
-            ) : (
-                <>
-                    <h2>Welcome, {user}!</h2>
-                    <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <header className="header">
+                <h1>Task Manager WebApp</h1>
+            </header>
 
-                    <h3>Create Task</h3>
-                    <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-                    <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                    <button className="register-btn" onClick={handleCreateTask}>Add Task</button>
+            <main>
+                {!user ? (
+                    <>
+                        <h2>Register / Login</h2>
+                        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+                        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <button className="register-btn" onClick={handleRegister}>Register</button>
+                        <button className="login-btn" onClick={handleLogin}>Login</button>
+                    </>
+                ) : (
+                    <>
+                        <h2>Welcome, {user}!</h2>
+                        <button className="logout-btn" onClick={handleLogout}>Logout</button>
 
-                    <h3>Your Tasks</h3>
-                    <div className="tasks-container">
-                        {tasks.map((task) => (
-                            <div key={task.id} className="task-card" style={{ backgroundColor: task.completed ? "#e6ffe6" : "#fff" }}>
-                                <h4 className="task-title">{task.title}</h4>
-                                <p className="task-description">{task.description || "No description provided."}</p>
-                                <div className="task-actions">
-                                    <button
-                                        className="mark-done-btn"
-                                        onClick={() => handleMarkDone(task.id)}
-                                        disabled={task.completed}
-                                    >
-                                        {task.completed ? "Completed" : "Mark Done"}
-                                    </button>
-                                    <button className="delete-btn" onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                        <h3>Create Task</h3>
+                        <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <button className="register-btn" onClick={handleCreateTask}>Add Task</button>
+
+                        <h3>Your Tasks</h3>
+                        <div className="tasks-container">
+                            {tasks.map((task) => (
+                                <div key={task.id} className="task-card" style={{ backgroundColor: task.completed ? "#e6ffe6" : "#fff" }}>
+                                    <h4 className="task-title">{task.title}</h4>
+                                    <p className="task-description">{task.description || "No description provided."}</p>
+                                    <div className="task-actions">
+                                        <button
+                                            className="mark-done-btn"
+                                            onClick={() => handleMarkDone(task.id)}
+                                            disabled={task.completed}
+                                        >
+                                            {task.completed ? "Completed" : "Mark Done"}
+                                        </button>
+                                        <button className="delete-btn" onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </>
-            )}
+                            ))}
+                        </div>
+                    </>
+                )}
+            </main>
+
+            <footer className="footer">
+                <p>Designed by Soumyadip</p>
+            </footer>
         </div>
     );
 }
