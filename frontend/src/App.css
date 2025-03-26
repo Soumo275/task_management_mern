@@ -1,11 +1,12 @@
 
 body {
   font-family: 'Nunito', sans-serif;
-  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
   color: #343a40;
   line-height: 1.6;
+  background: linear-gradient(45deg, #edece7, #33c5ff88);
+  min-height: 100vh; /* Ensure full viewport height */
 }
 
 .container {
@@ -128,6 +129,10 @@ button:hover {
   background-color: #ced4da;
   color: #6c757d;
   cursor: not-allowed;
+}
+.edit-button{
+  background-color: #1f6dc6;
+  color: white;
 }
 
 .delete-btn {
